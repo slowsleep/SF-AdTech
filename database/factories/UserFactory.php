@@ -5,6 +5,11 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use App\Models\Advertiser;
+use App\Models\Webmaster;
+use App\Models\User;
+use App\Models\Role;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -29,6 +34,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'role_id' => DB::table('roles')->inRandomOrder()->where('name', '!=', 'admin')->first()->id,
         ];
     }
 
@@ -40,5 +46,23 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (User $user) {
+            $role = $user->role_id;
+            $role = Role::find($role)->name;
+
+            if ($role === 'advertiser') {
+                Advertiser::factory()->create([
+                    'user_id' => $this->create()->id
+                ]);
+            } else if ($role === 'webmaster') {
+                Webmaster::factory()->create([
+                    'user_id' => $this->create()->id
+                ]);
+            }
+        });
     }
 }
