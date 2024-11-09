@@ -20,6 +20,8 @@ class UserSeeder extends Seeder
         for ($i = 0; $i < count($roles); $i++) {
             User::factory()->create([
                 'role_id' => $roles[$i]->id,
+                'name' => $roles[$i]->name,
+                'email' => $roles[$i]->name . '@local.host',
             ]);
         }
 
