@@ -7,7 +7,7 @@ use App\Models\Webmaster;
 use App\Models\Offer;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\WebmasterOffer>
  */
 class WebmasterOfferFactory extends Factory
 {
