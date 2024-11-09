@@ -26,7 +26,7 @@
             <p>Url: {{ $offer->url }}</p>
             <p>Стоимость перехода: {{ $offer->price }}</p>
             <p>Тема: {{ $offer->theme->name }}</p>
-            <p>status: {{ $offer->status ? 'active' : 'not active' }}</p>
+            <p>status: {{ $offer->active ? 'active' : 'not active' }}</p>
         </div>
         @endforeach
     </div>
