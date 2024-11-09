@@ -20,28 +20,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
         $this->call(RoleSeeder::class);
-
         $this->call(UserSeeder::class);
-
-        User::factory()->create([
-            'name' => 'Admin',
-            'password' => Hash::make('admin123'),
-            'email' => 'admin@example.com',
-            'role_id' => Role::where('name', '=', 'admin')->get()->id,
-        ]);
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => Hash::make('test123'),
-        ]);
-
         $this->call(SiteThemeSeeder::class);
         $this->call(OfferSeeder::class);
         $this->call(WebmasterOfferSeeder::class);
-
     }
 }
