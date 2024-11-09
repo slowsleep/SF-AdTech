@@ -9,6 +9,7 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 const form = useForm({
     name: '',
     email: '',
+    role: '',
     password: '',
     password_confirmation: '',
 });
@@ -54,6 +55,32 @@ const submit = () => {
                 />
 
                 <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <div class="mt-4 flex flex-col text-gray-300">
+                <span>Кем вы являетесь?</span>
+                <div class="flex flex-row gap-2">
+                    <input
+                        type="radio"
+                        name="role"
+                        id="advertiser"
+                        v-model="form.role"
+                        value="advertiser"
+                        required
+                    />
+                    <label for="advertiser">Рекламодатель</label>
+                </div>
+                <div class="flex flex-row gap-2">
+                    <input
+                        type="radio"
+                        name="role"
+                        id="webmaster"
+                        v-model="form.role"
+                        value="webmaster"
+                        required
+                    />
+                    <label for="webmaster">Веб-мастер</label>
+                </div>
             </div>
 
             <div class="mt-4">
