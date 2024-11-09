@@ -17,13 +17,6 @@ defineProps({
         required: true,
     },
 });
-
-function handleImageError() {
-    document.getElementById('screenshot-container')?.classList.add('!hidden');
-    document.getElementById('docs-card')?.classList.add('!row-span-1');
-    document.getElementById('docs-card-content')?.classList.add('!flex-row');
-    document.getElementById('background')?.classList.add('!hidden');
-}
 </script>
 
 <template>
@@ -34,9 +27,6 @@ function handleImageError() {
             class="absolute -left-20 top-0 max-w-[877px]"
             src="https://laravel.com/assets/img/welcome/background.svg"
         />
-        <!-- <div
-            class="relative flex min-h-screen flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white"
-        > -->
         <div
             class="relative flex min-h-screen flex-col items-center selection:bg-[#FF2D20] selection:text-white"
         >
