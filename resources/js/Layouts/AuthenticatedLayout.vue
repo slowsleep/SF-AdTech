@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
-import NavLink from '@/Components/NavLink.vue';
+import NavByRole from '@/Layouts/Partials/NavByRole.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
 
@@ -30,46 +30,7 @@ const showingNavigationDropdown = ref(false);
                             </div>
 
                             <!-- Navigation Links -->
-                            <div
-                                class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
-                            >
-                                <NavLink
-                                    :href="route('dashboard')"
-                                    :active="route().current('dashboard')"
-                                >
-                                    Dashboard
-                                </NavLink>
-                                <div
-                                    v-if="
-                                        $page.props.auth.user.role.name ==
-                                        'admin'
-                                    "
-                                >
-                                    <NavLink
-                                        :href="route('admin.index')"
-                                        :active="route().current('admin.index')"
-                                    >
-                                        Admin
-                                    </NavLink>
-                                    <p>Admin nav</p>
-                                </div>
-                                <div
-                                    v-else-if="
-                                        $page.props.auth.user.role.name ==
-                                        'webmaster'
-                                    "
-                                >
-                                    <p>Webmaster nav</p>
-                                </div>
-                                <div
-                                    v-else-if="
-                                        $page.props.auth.user.role.name ==
-                                        'advertiser'
-                                    "
-                                >
-                                    <p>Advertiser nav</p>
-                                </div>
-                            </div>
+                            <NavByRole />
                         </div>
 
                         <div class="hidden sm:ms-6 sm:flex sm:items-center">
