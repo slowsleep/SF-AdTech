@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\Admin\IndexController as AdminIndexController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -30,4 +31,7 @@ require __DIR__.'/auth.php';
 
 Route::get('test', [IndexController::class, 'index']);
 
-Route::get('admin', [AdminIndexController::class, 'index'])->middleware(['auth', 'admin'])->name('admin.index');
+Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function () {
+    Route::get('/', [AdminIndexController::class, 'index'])->name('admin.index');
+    Route::get('/users/{role?}', [AdminUserController::class, 'index'])->name('admin.users');
+});
