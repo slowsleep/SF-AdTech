@@ -15,8 +15,8 @@ import NavLink from '@/Components/NavLink.vue';
                 Admin
             </NavLink>
             <NavLink
-                :href="route('admin.users')"
-                :active="route().current('admin.users')"
+                :href="route('admin.users.index')"
+                :active="route().current('admin.users.index', '')"
             >
                 Users
             </NavLink>
