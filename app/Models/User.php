@@ -51,4 +51,14 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
+
+    public function advertiser()
+    {
+        return $this->hasOne(Advertiser::class);
+    }
+
+    public function webmaster()
+    {
+        return $this->hasOne(Webmaster::class);
+    }
 }
