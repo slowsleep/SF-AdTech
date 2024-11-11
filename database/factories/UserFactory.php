@@ -56,11 +56,13 @@ class UserFactory extends Factory
 
             if ($role === 'advertiser') {
                 Advertiser::factory()->create([
-                    'user_id' => $this->create()->id
+                    'user_id' => $user->id,
+                    'name' => fake()->company
                 ]);
             } else if ($role === 'webmaster') {
                 Webmaster::factory()->create([
-                    'user_id' => $this->create()->id
+                    'user_id' => $user->id,
+                    'site' => fake()->url
                 ]);
             }
         });
