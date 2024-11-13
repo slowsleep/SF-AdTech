@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Advertiser;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -13,6 +14,7 @@ use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Role;
+use App\Models\Webmaster;
 
 class RegisteredUserController extends Controller
 {
@@ -40,12 +42,34 @@ class RegisteredUserController extends Controller
 
         $roleId = Role::where('name', $request->role)->first()->id;
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'role_id' => $roleId,
-            'password' => Hash::make($request->password),
-        ]);
+        if ($request->role == 'advertiser') {
+            $request->validate([
+                'nameCompany' => 'required|string|max:255',
+            ]);
+        } else if ($request->role == 'webmaster') {
+            $request->validate([
+                'site' => 'required|url',
+            ]);
+        }
+
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->role_id = $roleId;
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        if ($request->role == 'advertiser') {
+            Advertiser::create([
+                'user_id' => $user->id,
+                'name' => $request->nameCompany
+            ]);
+        } else if ($request->role == 'webmaster') {
+            Webmaster::create([
+                'user_id' => $user->id,
+                'site' => $request->site
+            ]);
+        }
 
         event(new Registered($user));
 
