@@ -41,10 +41,10 @@ watch(formRole, () => {
 
 watch(showSite, () => {
     console.log(showSite.value);
-})
+});
 watch(showNameCompany, () => {
     console.log(showNameCompany.value);
-})
+});
 </script>
 
 <template>
