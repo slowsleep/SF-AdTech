@@ -10,6 +10,7 @@ class Webmaster extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'site'
     ];
 
