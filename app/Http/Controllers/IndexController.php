@@ -14,7 +14,7 @@ class IndexController extends Controller
     {
         $users = DB::table('users')
             ->join('roles', 'users.role_id', '=', 'roles.id')
-            ->select('users.id', 'users.name', 'roles.name as role')
+            ->select('users.id', 'users.name', 'users.email', 'roles.name as role')
             ->get();
 
         return view('index', [

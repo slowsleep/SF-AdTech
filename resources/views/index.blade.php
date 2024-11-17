@@ -11,6 +11,7 @@
         @foreach ($users as $user)
         <div style="display: flex; flex-direction: column; border: 1px dotted;">
             <p>User name: {{ $user->name }}</p>
+            <p>Email: {{ $user->email }}</p>
             <p>Role: {{ $user->role }}</p>
         </div>
         @endforeach
