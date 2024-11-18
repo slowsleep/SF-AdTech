@@ -29,7 +29,20 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $validated = $request->validated();
+        $request->user()->fill($validated);
+
+        if (isset($validated['nameAdvertiser'])) {
+            $advertiser = $request->user()->advertiser;
+            $advertiser->name = $validated['nameAdvertiser'];
+            $advertiser->save();
+        }
+
+        if (isset($validated['site'])) {
+            $webmaster = $request->user()->webmaster;
+            $webmaster->site = $validated['site'];
+            $webmaster->save();
+        }
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
@@ -37,7 +50,7 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit');
+        return Redirect::route('profile.edit')->with('status', 'Profile updated successfully!');
     }
 
     /**

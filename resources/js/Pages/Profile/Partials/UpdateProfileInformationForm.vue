@@ -19,6 +19,8 @@ const user = usePage().props.auth.user;
 const form = useForm({
     name: user.name,
     email: user.email,
+    nameAdvertiser: user.advertiser ? user.advertiser.name : null,
+    site: user.webmaster ? user.webmaster.site : null,
 });
 </script>
 
@@ -52,6 +54,42 @@ const form = useForm({
                 />
 
                 <InputError class="mt-2" :message="form.errors.name" />
+            </div>
+
+            <div v-if="$page.props.auth.user.role.name == 'advertiser'">
+                <InputLabel
+                    for="nameAdvertiser"
+                    value="Название рекламодетяля"
+                />
+
+                <TextInput
+                    id="nameAdvertiser"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.nameAdvertiser"
+                    autofocus
+                    autocomplete="nameAdvertiser"
+                />
+
+                <InputError
+                    class="mt-2"
+                    :message="form.errors.nameAdvertiser"
+                />
+            </div>
+
+            <div v-if="$page.props.auth.user.role.name == 'webmaster'">
+                <InputLabel for="site" value="Site" />
+
+                <TextInput
+                    id="site"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.site"
+                    autofocus
+                    autocomplete="site"
+                />
+
+                <InputError class="mt-2" :message="form.errors.site" />
             </div>
 
             <div>

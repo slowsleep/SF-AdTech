@@ -15,7 +15,7 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
@@ -26,5 +26,15 @@ class ProfileUpdateRequest extends FormRequest
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
         ];
+
+        if ($this->user()->role->name === 'advertiser') {
+            $rules['nameAdvertiser'] = ['required', 'string', 'max:255'];
+        }
+
+        if ($this->user()->role->name === 'webmaster') {
+            $rules['site'] = ['required', 'url', 'lowercase', 'max:255'];
+        }
+
+        return $rules;
     }
 }
