@@ -9,6 +9,8 @@ class Advertiser extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'user_id';
+
     protected $fillable = [
         'user_id',
         'name'
