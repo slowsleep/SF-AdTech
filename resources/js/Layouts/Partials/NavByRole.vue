@@ -28,6 +28,16 @@ import NavLink from '@/Components/NavLink.vue';
             >
                 Dashboard
             </NavLink>
+            <NavLink
+                :href="route('offers.index')"
+                :active="route().current('offers.index')"
+            >
+                {{
+                    $page.props.auth.user.role.name == 'advertiser'
+                        ? 'My offers'
+                        : 'Offers'
+                }}
+            </NavLink>
             <div v-if="$page.props.auth.user.role.name == 'webmaster'">
                 <p>Webmaster nav</p>
             </div>
