@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\Admin\IndexController as AdminIndexController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\OfferController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -25,6 +26,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/offers', [OfferController::class, 'index'])->name('offers.index');
+});
+
+Route::group(['middleware' => ['auth', 'advertiser']], function () {
+    Route::get('/offers/create', [OfferController::class, 'create'])->name('offers.create');
 });
 
 require __DIR__.'/auth.php';
