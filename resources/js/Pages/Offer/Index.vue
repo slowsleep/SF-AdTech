@@ -1,8 +1,31 @@
 <script setup>
 import NavLink from '@/Components/NavLink.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link, usePage } from '@inertiajs/vue3';
+import axios from 'axios';
+
+let offers = usePage().props.offers;
+
+const destroy = (id) => {
+    console.log('destroy', id);
+    axios.delete(route('api.offers.destroy', id)).then((response) => {
+        if (response.data.error) {
+            console.log(response.data.message);
+        } else {
+            offers.forEach((item, index) => {
+                if (item.id == id) {
+                    offers.splice(index, 1);
+                }
+            });
+        }
+    });
+};
+
+const subscribe = () => {
+    console.log('subscribe');
+};
 </script>
 
 <template>
@@ -26,7 +49,18 @@ import { Head } from '@inertiajs/vue3';
                             : 'Offers'
                     }}
                 </h2>
-                <p class="text-gray-700 dark:text-gray-400">name: {{ $page.props.auth.user.advertiser.name }}</p>
+                <p
+                    class="text-gray-700 dark:text-gray-400"
+                    v-if="$page.props.auth.user.role.name == 'advertiser'"
+                >
+                    name: {{ $page.props.auth.user.advertiser.name }}
+                </p>
+                <p
+                    class="text-gray-700 dark:text-gray-400"
+                    v-if="$page.props.auth.user.role.name == 'webmaster'"
+                >
+                    site: {{ $page.props.auth.user.webmaster.site }}
+                </p>
             </div>
         </template>
 
@@ -38,11 +72,13 @@ import { Head } from '@inertiajs/vue3';
                 <SecondaryButton class="m-2">Create</SecondaryButton>
             </NavLink>
             <div
-                v-for="offer in $page.props.offers"
+                v-for="offer in offers"
                 :key="offer.id"
                 class="m-2 bg-gray-400 p-4"
             >
-                <p>Заголовок: {{ offer.title }}</p>
+                <Link :href="route('offers.show', offer.id)"
+                    ><p>Заголовок: {{ offer.title }}</p></Link
+                >
 
                 <p v-if="$page.props.auth.user.role.name != 'advertiser'">
                     Рекламодатель: {{ offer.advertiser.name }}
@@ -52,6 +88,19 @@ import { Head } from '@inertiajs/vue3';
                 <p>Сайт: {{ offer.url }}</p>
                 <p>Тема: {{ offer.theme.name }}</p>
                 <p>Активность: {{ offer.active ? 'active' : 'not active' }}</p>
+                <div v-if="$page.props.auth.user.role.name == 'advertiser'">
+                    <Link :href="route('offers.edit', offer.id)">
+                        <PrimaryButton>редактировать</PrimaryButton>
+                    </Link>
+                    <PrimaryButton @click="destroy(offer.id)">
+                        удалить
+                    </PrimaryButton>
+                </div>
+                <div v-else-if="$page.props.auth.user.role.name == 'webmaster'">
+                    <PrimaryButton @click="subscribe">
+                        подписаться
+                    </PrimaryButton>
+                </div>
             </div>
         </div>
     </AuthenticatedLayout>
