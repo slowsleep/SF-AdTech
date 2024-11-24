@@ -7,7 +7,6 @@ use Inertia\Inertia;
 use App\Models\SiteTheme;
 use App\Models\Offer;
 use Auth;
-use Barryvdh\Debugbar\Facades\Debugbar;
 
 class OfferController extends Controller
 {
@@ -31,6 +30,25 @@ class OfferController extends Controller
     public function create()
     {
         return Inertia::render('Offer/Create', [
+            'themes' => SiteTheme::all(),
+        ]);
+    }
+
+    public function show($id)
+    {
+        $offer = Offer::with('theme')->find($id);
+
+        return Inertia::render('Offer/Show', [
+            'offer' => $offer,
+        ]);
+    }
+
+    public function edit($id)
+    {
+        $offer = Offer::with('theme')->find($id);
+
+        return Inertia::render('Offer/Edit', [
+            'offer' => $offer,
             'themes' => SiteTheme::all(),
         ]);
     }

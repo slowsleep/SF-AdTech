@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function () {
 
 Route::group(['middleware' => ['auth', 'advertiser']], function () {
     Route::get('/offers/create', [OfferController::class, 'create'])->name('offers.create');
+    Route::get('/offers/edit/{id?}', [OfferController::class, 'edit'])->name('offers.edit');
+    Route::get('/offers/{id?}', [OfferController::class, 'show'])->name('offers.show');
 });
 
 require __DIR__.'/auth.php';
