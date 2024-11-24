@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('webmasters_offers', function (Blueprint $table) {
+        Schema::create('offer_subscriptions', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('webmaster_id')->nullable()->constrained('webmasters')->references('user_id')->nullOnDelete();
             $table->foreignId('offer_id')->nullable()->constrained('offers')->references('id')->nullOnDelete();
+            $table->boolean('is_subscribed');
+            $table->string('ref_link');
             $table->timestamps();
         });
     }
@@ -23,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('webmasters_offers');
+        Schema::dropIfExists('offer_subscriptions');
     }
 };

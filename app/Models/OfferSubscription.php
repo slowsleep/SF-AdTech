@@ -8,15 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Offer;
 use App\Models\Webmaster;
 
-class WebmasterOffer extends Model
+class OfferSubscription extends Model
 {
     use HasFactory;
 
-    protected $table = 'webmasters_offers';
+    protected $table = 'offer_subscriptions';
 
     protected $fillable = [
         'webmaster_id',
         'offer_id',
+        'is_subscribed',
+        'ref_link'
     ];
 
     public function webmaster()

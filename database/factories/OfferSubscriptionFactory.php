@@ -7,9 +7,9 @@ use App\Models\Webmaster;
 use App\Models\Offer;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\WebmasterOffer>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\OfferSubscription>
  */
-class WebmasterOfferFactory extends Factory
+class OfferSubscriptionFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -20,7 +20,9 @@ class WebmasterOfferFactory extends Factory
     {
         return [
             'webmaster_id' => Webmaster::all()->random()->user_id,
-            'offer_id' => Offer::all()->random()->id
+            'offer_id' => Offer::all()->random()->id,
+            'is_subscribed' => fake()->boolean(),
+            'ref_link' => fake()->url(),
         ];
     }
 }
