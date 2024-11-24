@@ -40,9 +40,47 @@ class OfferController extends Controller
                 'error' => true,
                 'message' => $e->getMessage(),
             ];
-            
+
             return response()->json($response, 500);
         }
 
+    }
+
+    public function update(Request $request)
+    {
+        try {
+            $request->validate([
+                'id' => 'required|numeric',
+                'title' => 'string|max:255',
+                'price' => 'numeric|between:0.00,99.99|min:0',
+                'theme_id' => 'numeric|exists:site_themes,id',
+                'active' => 'bool',
+            ]);
+            $offer = Offer::findOrFail($request->id);
+            $offer->update($request->all());
+            $response = ['error' => false, 'message' => 'Offer updated successfully'];
+
+            return response()->json($response, 200);
+        } catch(\Exception $e) {
+            Debugbar::error($e);
+            $response = ['error' => true, 'message' => $e];
+
+            return response()->json($response, 500);
+        }
+    }
+
+    public function destroy(int $id)
+    {
+        try {
+            $offer = Offer::findOrFail($id);
+            $offer->delete();
+            $response = ['error' => false, 'message' => 'Offer deleted successfully'];
+
+            return response()->json($response, 200);
+        } catch(\Exception $e) {
+            Debugbar::error($e);
+            $response = ['error' => true, 'message' => $e];
+            return response()->json($response, 500);
+        }
     }
 }
