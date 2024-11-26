@@ -27,4 +27,9 @@ class Offer extends Model
     {
         return $this->belongsTo(SiteTheme::class, 'theme_id', 'id');
     }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(OfferSubscription::class);
+    }
 }
