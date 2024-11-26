@@ -21,7 +21,7 @@ class OfferFactory extends Factory
     {
         return [
             'advertiser_id' => Advertiser::all()->random()->user_id,
-            'title' => fake()->title(),
+            'title' => fake()->word(),
             'price' => fake()->randomFloat(2, 0, 100),
             'url' => fake()->url(),
             'theme_id' => SiteTheme::all()->random()->id,
