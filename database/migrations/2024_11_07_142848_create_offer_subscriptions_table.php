@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('webmaster_id')->nullable()->constrained('webmasters')->references('user_id')->nullOnDelete();
             $table->foreignId('offer_id')->nullable()->constrained('offers')->references('id')->nullOnDelete();
-            $table->boolean('is_subscribed');
-            $table->string('ref_link');
+            $table->string('ref_link_uuid');
             $table->timestamps();
+
+            $table->unique(['webmaster_id', 'offer_id']);
         });
     }
 
