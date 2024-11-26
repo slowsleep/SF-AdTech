@@ -7,6 +7,8 @@ use Inertia\Inertia;
 use App\Models\SiteTheme;
 use App\Models\Offer;
 use Auth;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use App\Models\OfferSubscription;
 
 class OfferController extends Controller
 {
@@ -19,12 +21,18 @@ class OfferController extends Controller
 
         if ($user->role->name === 'advertiser') {
             $advertiser = Advertiser::where('user_id', $user->id)->first();
-            $offers = Offer::where('advertiser_id', $advertiser->user_id)->with('theme')->get();
+            $offers = Offer::where('advertiser_id', '=', $user->id)
+            ->with('theme')
+            ->withCount('subscriptions')
+            ->get();
+            $props = compact('offers');
         } else {
             $offers = Offer::all()->load('theme', 'advertiser');
+            $subscriptions = OfferSubscription::where('webmaster_id', $user->id)->pluck('offer_id')->toArray();
+            $props = compact('offers', 'subscriptions');
         }
 
-        return Inertia::render('Offer/Index', ['offers' => $offers]);
+        return Inertia::render('Offer/Index', $props);
     }
 
     public function create()
@@ -36,7 +44,7 @@ class OfferController extends Controller
 
     public function show($id)
     {
-        $offer = Offer::with('theme')->find($id);
+        $offer = Offer::with('theme', 'advertiser')->find($id);
 
         return Inertia::render('Offer/Show', [
             'offer' => $offer,
