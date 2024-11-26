@@ -5,8 +5,10 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
 import axios from 'axios';
+import Nav from './Partials/Nav.vue';
 
 let offers = usePage().props.offers;
+let subscriptions = usePage().props.subscriptions;
 
 const destroy = (id) => {
     console.log('destroy', id);
@@ -23,8 +25,27 @@ const destroy = (id) => {
     });
 };
 
-const subscribe = () => {
+const subscribe = (offer_id) => {
     console.log('subscribe');
+    axios
+        .post(route('api.offers.subscriptions.store'), { offer_id: offer_id })
+        .then(() => {
+            subscriptions.push(offer_id);
+        });
+};
+
+const unsubscribe = (offer_id) => {
+    console.log('unsubscribe');
+    axios
+        .delete(route('api.offers.subscriptions.destroy'), {
+            data: {
+                offer_id: offer_id,
+            },
+        })
+        .then(() => {
+            let offerIdIndex = subscriptions.indexOf(offer_id);
+            subscriptions.splice(offerIdIndex, 1);
+        });
 };
 </script>
 
@@ -39,29 +60,7 @@ const subscribe = () => {
 
     <AuthenticatedLayout>
         <template #header>
-            <div class="flex flex-row gap-5">
-                <h2
-                    class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200"
-                >
-                    {{
-                        $page.props.auth.user.role.name == 'advertiser'
-                            ? 'My offers'
-                            : 'Offers'
-                    }}
-                </h2>
-                <p
-                    class="text-gray-700 dark:text-gray-400"
-                    v-if="$page.props.auth.user.role.name == 'advertiser'"
-                >
-                    name: {{ $page.props.auth.user.advertiser.name }}
-                </p>
-                <p
-                    class="text-gray-700 dark:text-gray-400"
-                    v-if="$page.props.auth.user.role.name == 'webmaster'"
-                >
-                    site: {{ $page.props.auth.user.webmaster.site }}
-                </p>
-            </div>
+            <Nav />
         </template>
 
         <div class="mx-auto max-w-7xl">
@@ -95,9 +94,16 @@ const subscribe = () => {
                     <PrimaryButton @click="destroy(offer.id)">
                         удалить
                     </PrimaryButton>
+                    <p>count: {{ offer.subscriptions_count }}</p>
                 </div>
                 <div v-else-if="$page.props.auth.user.role.name == 'webmaster'">
-                    <PrimaryButton @click="subscribe">
+                    <PrimaryButton
+                        v-if="subscriptions.includes(offer.id)"
+                        @click="unsubscribe(offer.id)"
+                    >
+                        отписаться
+                    </PrimaryButton>
+                    <PrimaryButton v-else @click="subscribe(offer.id)">
                         подписаться
                     </PrimaryButton>
                 </div>
