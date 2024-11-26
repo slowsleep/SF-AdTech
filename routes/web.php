@@ -8,6 +8,7 @@ use App\Http\Controllers\IndexController;
 use App\Http\Controllers\Admin\IndexController as AdminIndexController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\OfferController;
+use App\Http\Controllers\OfferSubscriptionController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -27,12 +28,18 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/offers', [OfferController::class, 'index'])->name('offers.index');
+    Route::get('/offers/{id?}', [OfferController::class, 'show'])
+    ->where('id', '[0-9]+')
+    ->name('offers.show');
 });
 
 Route::group(['middleware' => ['auth', 'advertiser']], function () {
     Route::get('/offers/create', [OfferController::class, 'create'])->name('offers.create');
     Route::get('/offers/edit/{id?}', [OfferController::class, 'edit'])->name('offers.edit');
-    Route::get('/offers/{id?}', [OfferController::class, 'show'])->name('offers.show');
+});
+
+Route::group(['middleware' => ['auth', 'webmaster']], function() {
+    Route::get('/offers/subscriptions', [OfferSubscriptionController::class, 'index'])->name('offers.subscriptions.index');
 });
 
 require __DIR__.'/auth.php';
