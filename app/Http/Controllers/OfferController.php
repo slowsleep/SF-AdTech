@@ -44,7 +44,7 @@ class OfferController extends Controller
 
     public function show($id)
     {
-        $offer = Offer::with('theme', 'advertiser')->find($id);
+        $offer = Offer::with('theme', 'advertiser', 'subscriptions', 'subscriptions.tracking')->find($id);
 
         return Inertia::render('Offer/Show', [
             'offer' => $offer,
