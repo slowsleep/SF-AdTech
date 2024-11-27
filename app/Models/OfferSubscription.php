@@ -30,4 +30,9 @@ class OfferSubscription extends Model
     {
         return $this->belongsTo(Offer::class);
     }
+
+    public function tracking()
+    {
+        return $this->hasMany(OfferTracking::class, 'offer_subscription_id', 'id');
+    }
 }
