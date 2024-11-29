@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\IndexController as AdminIndexController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\OfferSubscriptionController;
+use App\Http\Controllers\OfferSubscriptionRefController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -52,3 +53,5 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function 
     Route::get('/users/create', [AdminUserController::class, 'create'])->name('admin.users.create');
     Route::post('/users', [AdminUserController::class, 'store'])->name('admin.users.store');
 });
+
+Route::get('/r/{ref_uuid}', [OfferSubscriptionRefController::class, 'index']);
