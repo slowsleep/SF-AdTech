@@ -44,7 +44,13 @@ class OfferController extends Controller
 
     public function show($id)
     {
-        $offer = Offer::with('theme', 'advertiser', 'subscriptions', 'subscriptions.tracking')->find($id);
+        if (Auth::user()->role->name === 'advertiser') {
+            $offer = Offer::with('theme', 'advertiser', 'subscriptions', 'subscriptions.ref_log')->find($id);
+        } else if(Auth::user()->role->name === 'webmaster') {
+            $offer = Offer::with('theme', 'advertiser')->find($id);
+            $subscription = OfferSubscription::where('offer_id', $offer->id)->where('webmaster_id', Auth::user()->id)->with('ref_log')->get();
+            $offer['subscription'] = $subscription;
+        }
 
         return Inertia::render('Offer/Show', [
             'offer' => $offer,

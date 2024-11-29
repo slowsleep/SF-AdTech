@@ -40,9 +40,56 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                 <p>webmaster_id {{ subscription.webmaster_id }}</p>
                 <p>ref_link_uuid {{ subscription.ref_link_uuid }}</p>
                 <p>created_at {{ subscription.created_at }}</p>
-
-                <h3>clicks: {{ subscription.tracking[0].clicks }}</h3>
+                <div v-if="subscription.ref_log.length > 0">
+                    <h2>Переходы</h2>
+                    <div v-for="log in subscription.ref_log" :key="log.id">
+                        <p>id: {{ log.id }}</p>
+                        <p>created_at: {{ log.created_at }}</p>
+                    </div>
+                </div>
             </div>
+        </div>
+
+        <div
+            class="m-4 bg-gray-400 p-6"
+            v-else-if="
+                $page.props.auth.user.role.name == 'webmaster' &&
+                $page.props.offer.subscription[0]
+            "
+        >
+            <h2 class="m-4 text-lg">Подписка на заказ</h2>
+            <p>id {{ $page.props.offer.subscription[0].id }}</p>
+            <p>offer_id {{ $page.props.offer.subscription[0].offer_id }}</p>
+            <p>
+                webmaster_id
+                {{ $page.props.offer.subscription[0].webmaster_id }}
+            </p>
+            <p>
+                ref_link_uuid
+                {{ $page.props.offer.subscription[0].ref_link_uuid }}
+            </p>
+            <p>created_at {{ $page.props.offer.subscription[0].created_at }}</p>
+            <p>
+                ref_log length
+                {{ $page.props.offer.subscription[0].ref_log.length }}
+            </p>
+            <div v-if="$page.props.offer.subscription[0].ref_log.length > 0">
+                <h2>Переходы</h2>
+                <div
+                    v-for="log in $page.props.offer.subscription[0].ref_log"
+                    :key="log.id"
+                >
+                    <p>id: {{ log.id }}</p>
+                    <p>created_at: {{ log.created_at }}</p>
+                </div>
+            </div>
+            <h2 class="text-md m-3">
+                Доход:
+                {{
+                    $page.props.offer.subscription[0].ref_log.length *
+                    $page.props.offer.price
+                }}
+            </h2>
         </div>
     </AuthenticatedLayout>
 </template>
