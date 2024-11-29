@@ -52,6 +52,10 @@ class OfferController extends Controller
             $offer['subscription'] = $subscription;
         }
 
+        if (empty($offer)) {
+            abort(404);
+        }
+
         return Inertia::render('Offer/Show', [
             'offer' => $offer,
         ]);
