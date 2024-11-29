@@ -29,7 +29,7 @@ class OfferSubscription extends Model
 
     public function offer()
     {
-        return $this->belongsTo(Offer::class);
+        return $this->belongsTo(Offer::class, 'offer_id', 'id');
     }
 
     public function ref_log()
