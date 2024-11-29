@@ -8,7 +8,7 @@ use Database\Seeders\SiteThemeSeeder;
 use Database\Seeders\OfferSeeder;
 use Database\Seeders\OfferSubscriptionSeeder;
 use Database\Seeders\UserSeeder;
-use Database\Seeders\OfferTrackingSeeder;
+use Database\Seeders\OfferSubscriptionRefLogSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,6 +22,6 @@ class DatabaseSeeder extends Seeder
         $this->call(SiteThemeSeeder::class);
         $this->call(OfferSeeder::class);
         $this->call(OfferSubscriptionSeeder::class);
-        $this->call(OfferTrackingSeeder::class);
+        $this->call(OfferSubscriptionRefLogSeeder::class);
     }
 }

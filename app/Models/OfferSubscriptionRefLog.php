@@ -5,16 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OfferTracking extends Model
+class OfferSubscriptionRefLog extends Model
 {
-    /** @use HasFactory<\Database\Factories\OfferTrackingFactory> */
+    /** @use HasFactory<\Database\Factories\OfferSubscriptionRefLogFactory> */
     use HasFactory;
 
-    protected $table = 'offer_tracking';
+    protected $table = 'offer_subscription_ref_logs';
 
     protected $fillable = [
         'offer_subscription_id',
-        'clicks',
     ];
 
     public function offer_subscription()

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Offer;
 use App\Models\Webmaster;
+use App\Models\OfferSubscriptionRefLog;
 
 class OfferSubscription extends Model
 {
@@ -31,8 +32,8 @@ class OfferSubscription extends Model
         return $this->belongsTo(Offer::class);
     }
 
-    public function tracking()
+    public function ref_log()
     {
-        return $this->hasMany(OfferTracking::class, 'offer_subscription_id', 'id');
+        return $this->hasMany(OfferSubscriptionRefLog::class, 'offer_subscription_id', 'id');
     }
 }

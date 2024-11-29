@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('offer_tracking', function (Blueprint $table) {
+        Schema::create('offer_subscription_ref_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('offer_subscription_id')->constrained('offer_subscriptions')->references('id')->cascadeOnDelete();
-            $table->integer('clicks')->default(0);
             $table->timestamps();
-
-            $table->unique(['offer_subscription_id']);
         });
     }
 
@@ -26,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('offer_tracking');
+        Schema::dropIfExists('offer_subscription_ref_logs');
     }
 };
