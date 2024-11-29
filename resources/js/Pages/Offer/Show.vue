@@ -46,6 +46,13 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                         <p>id: {{ log.id }}</p>
                         <p>created_at: {{ log.created_at }}</p>
                     </div>
+                    <p>
+                        Расходы:
+                        {{
+                            subscription.ref_log.length *
+                            $page.props.offer.price
+                        }}
+                    </p>
                 </div>
             </div>
         </div>
@@ -87,7 +94,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                 Доход:
                 {{
                     $page.props.offer.subscription[0].ref_log.length *
-                    $page.props.offer.price
+                    (0.8 * $page.props.offer.price)
                 }}
             </h2>
         </div>
