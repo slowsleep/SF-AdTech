@@ -21,3 +21,5 @@ Route::group(['middleware' => ['web', 'webmaster', 'auth:sanctum']], function(){
     Route::post('offers/subscriptions', [OfferSubscriptionController::class, 'store'])->name('api.offers.subscriptions.store');
     Route::delete('offers/subscriptions/{id?}', [OfferSubscriptionController::class, 'destroy'])->name('api.offers.subscriptions.destroy');
 });
+
+Route::get('offers/subscriptions/{id?}/statistics', [OfferSubscriptionController::class, 'statistics'])->name('api.offers.subscriptions.statistics')->middleware(['web', 'auth:sanctum']);

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\OfferSubscription;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Str;
+use App\Models\OfferSubscriptionRefLog;
 
 class OfferSubscriptionController extends Controller
 {
@@ -36,4 +37,26 @@ class OfferSubscriptionController extends Controller
             return response()->json(['error' => true, 'message' => 'Offer unsubscribed failed']);
         }
     }
+
+    public function statistics(Request $request, int $id)
+    {
+        try {
+            if ($request->period == 'day') {
+                $logs = OfferSubscriptionRefLog::where('offer_subscription_id', '=', $id)->where('created_at', '>=', now()->subDays(1))->get();
+            } else if ($request->period == 'month') {
+                $logs = OfferSubscriptionRefLog::where('offer_subscription_id', '=', $id)->where('created_at', '>=', now()->subMonth())->get();
+            } else if ($request->period == 'year') {
+                $logs = OfferSubscriptionRefLog::where('offer_subscription_id', '=', $id)->where('created_at', '>=', now()->subYear())->get();
+            }
+
+            $response = ['error' => false, 'message' => 'Statistics', 'data' => $logs];
+
+            return response()->json($response, 200);
+        } catch(\Exception $e) {
+            Debugbar::error($e);
+            $response = ['error' => true, 'message' => $e];
+            return response()->json($response, 500);
+        }
+    }
+
 }

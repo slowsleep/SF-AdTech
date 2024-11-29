@@ -1,6 +1,7 @@
 <script setup>
 import { Head } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import Statistics from './Partials/Statistics.vue';
 </script>
 
 <template>
@@ -46,6 +47,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                         <p>id: {{ log.id }}</p>
                         <p>created_at: {{ log.created_at }}</p>
                     </div>
+                    <Statistics :id="subscription.id" />
                     <p>
                         Расходы:
                         {{
@@ -90,6 +92,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
                     <p>created_at: {{ log.created_at }}</p>
                 </div>
             </div>
+            <Statistics :id="$page.props.offer.subscription[0].id" />
             <h2 class="text-md m-3">
                 Доход:
                 {{
