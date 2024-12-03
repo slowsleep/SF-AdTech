@@ -1,6 +1,36 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Doughnut } from 'vue-chartjs';
+
+ChartJS.register(ArcElement, Tooltip, Legend);
+
+const offerPriceRefs = usePage().props.offerPriceRefs;
+
+const randHexColor = () => {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+};
+
+const colors = [...Array.from({length: offerPriceRefs.length}, () => randHexColor())];
+const data = {
+    labels: offerPriceRefs.map((item) => item.title),
+    datasets: [
+        {
+            backgroundColor: colors,
+            data: offerPriceRefs.map((item) => item.price * 0.2 * item.ref_log_count),
+        },
+    ],
+};
+const options = {
+    responsive: true,
+    maintainAspectRatio: true,
+};
 </script>
 
 <template>
@@ -19,9 +49,7 @@ import { Head } from '@inertiajs/vue3';
                         )
                     }}
                 </p>
-                <!-- TODO: вместо списка можно потом сделать круговой график из
-                общего дохода и проценты дохода с подписок на заказы (какая
-                подписка принесла больше дохода системе) -->
+                <Doughnut :data="data" :options="options" />
                 <div
                     v-for="offer in $page.props.offerPriceRefs"
                     :key="offer.id"
@@ -35,6 +63,7 @@ import { Head } from '@inertiajs/vue3';
                             >offer id: {{ offer.offer_id }}</a
                         >
                     </p>
+                    <p>offer title: {{ offer.title }}</p>
                     <p>стоимость: {{ offer.price }}</p>
                     <p>количество переходов: {{ offer.ref_log_count }}</p>
                     <p>доход: {{ offer.price * 0.2 * offer.ref_log_count }}</p>
