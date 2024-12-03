@@ -8,6 +8,7 @@ use App\Models\OfferSubscription;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Str;
 use App\Models\OfferSubscriptionRefLog;
+use Carbon\Carbon;
 
 class OfferSubscriptionController extends Controller
 {
@@ -42,11 +43,17 @@ class OfferSubscriptionController extends Controller
     {
         try {
             if ($request->period == 'day') {
-                $logs = OfferSubscriptionRefLog::where('offer_subscription_id', '=', $id)->where('created_at', '>=', now()->subDays(1))->get();
+                $startOfDay = Carbon::now('GMT+3')->startOfDay()->timezone('GMT+0');
+                $endOfDay = Carbon::now('GMT+3')->endOfDay()->timezone('GMT+0');
+                $logs = OfferSubscriptionRefLog::where('offer_subscription_id', '=', $id)->whereBetween('created_at', [$startOfDay, $endOfDay])->orderBy('created_at')->get();
             } else if ($request->period == 'month') {
-                $logs = OfferSubscriptionRefLog::where('offer_subscription_id', '=', $id)->where('created_at', '>=', now()->subMonth())->get();
+                $startOfMonth = Carbon::now('GMT+3')->startOfMonth()->timezone('GMT+0');
+                $endOfMonth = Carbon::now('GMT+3')->endOfMonth()->timezone('GMT+0');
+                $logs = OfferSubscriptionRefLog::where('offer_subscription_id', '=', $id)->whereBetween('created_at', [$startOfMonth, $endOfMonth])->orderBy('created_at')->get();
             } else if ($request->period == 'year') {
-                $logs = OfferSubscriptionRefLog::where('offer_subscription_id', '=', $id)->where('created_at', '>=', now()->subYear())->get();
+                $startOfYear = Carbon::now('GMT+3')->startOfYear()->timezone('GMT+0');
+                $endOfYear = Carbon::now('GMT+3')->endOfYear()->timezone('GMT+0');
+                $logs = OfferSubscriptionRefLog::where('offer_subscription_id', '=', $id)->whereBetween('created_at', [$startOfYear, $endOfYear])->orderBy('created_at')->get();
             }
 
             $response = ['error' => false, 'message' => 'Statistics', 'data' => $logs];
