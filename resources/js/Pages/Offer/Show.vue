@@ -29,7 +29,7 @@ import Subscription from './Partials/Subscription.vue';
             </div>
 
             <div
-                class="m-4 bg-gray-400 p-6"
+                class="m-6 bg-gray-400 p-8"
                 v-if="$page.props.auth.user.role.name == 'advertiser'"
             >
                 <h2 class="m-4 text-lg">Подписки вебмастеров</h2>
@@ -49,7 +49,7 @@ import Subscription from './Partials/Subscription.vue';
             </div>
 
             <div
-                class="m-4 bg-gray-400 p-6"
+                class="m-6 bg-gray-400 p-8"
                 v-else-if="
                     $page.props.auth.user.role.name == 'webmaster' &&
                     $page.props.offer.subscription[0]
@@ -60,6 +60,24 @@ import Subscription from './Partials/Subscription.vue';
                     :offer="$page.props.offer"
                     :subscription="$page.props.offer.subscription[0]"
                 />
+            </div>
+
+            <div
+                class="m-6 bg-gray-400 p-8"
+                v-if="
+                    $page.props.auth.user.role.name == 'admin' &&
+                    $page.props.offer.subscriptions[0]
+                "
+            >
+                <div
+                    v-for="subscription in $page.props.offer.subscriptions"
+                    :key="subscription.id"
+                >
+                    <Subscription
+                        :offer="$page.props.offer"
+                        :subscription="subscription"
+                    />
+                </div>
             </div>
         </div>
     </AuthenticatedLayout>

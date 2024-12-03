@@ -50,6 +50,8 @@ class OfferController extends Controller
             $offer = Offer::with('theme', 'advertiser')->find($id);
             $subscription = OfferSubscription::where('offer_id', $offer->id)->where('webmaster_id', Auth::user()->id)->with('ref_log')->get();
             $offer['subscription'] = $subscription;
+        } else if (Auth::user()->role->name === 'admin') {
+            $offer = Offer::with('theme', 'advertiser', 'subscriptions', 'subscriptions.webmaster', 'subscriptions.ref_log')->find($id);
         }
 
         if (empty($offer)) {
