@@ -24,7 +24,7 @@ import Subscription from './Partials/Subscription.vue';
                 <p>тема: {{ $page.props.offer.theme.name }}</p>
                 <p>
                     статус:
-                    {{ $page.props.offer.is_active ? 'active' : 'not active' }}
+                    {{ $page.props.offer.active ? 'active' : 'not active' }}
                 </p>
             </div>
 
