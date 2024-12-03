@@ -3,14 +3,35 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Offer;
+use App\Models\OfferSubscription;
+use App\Models\OfferSubscriptionRefLog;
+use Barryvdh\Debugbar\Facades\Debugbar;
 
 class IndexController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Admin/Index');
+        $offers = Offer::with('advertiser', 'theme', 'subscriptions', 'subscriptions.ref_log')->get();
+
+        // ид подписки на оффер, ид оффера, цена на оффер, количество переходов
+        $offerPriceRefs = OfferSubscription::select('offer_subscriptions.id', 'offer_subscriptions.offer_id', 'offers.price')->join('offers', 'offer_subscriptions.offer_id', '=', 'offers.id')->withCount('ref_log')->get();
+
+        $count_ref = OfferSubscription::count();
+        $redirects = OfferSubscriptionRefLog::count();
+        // TODO: (когда веб-мастер попытался перенаправить на offer, на который он не подписан)
+        $rejections = 0;
+
+        $statistics = [
+            'count_ref' => $count_ref,
+            'redirects' => $redirects,
+            'rejections' => $rejections,
+        ];
+
+        Debugbar::info($offerPriceRefs);
+        Debugbar::info($statistics);
+
+        return Inertia::render('Admin/Index', compact('offerPriceRefs', 'statistics'));
     }
 }
