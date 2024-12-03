@@ -25,6 +25,38 @@ const destroy = (id) => {
     });
 };
 
+const activation = (id) => {
+    console.log('activation', id);
+    axios
+        .patch(route('api.offers.update'), { id: id, active: true })
+        .then((response) => {
+            console.log(response.data.message);
+            if (!response.data.error) {
+                offers.forEach((item) => {
+                    if (item.id == id) {
+                        item.active = true;
+                    }
+                });
+            }
+        });
+};
+
+const deactivation = (id) => {
+    console.log('deactivation', id);
+    axios
+        .patch(route('api.offers.update'), { id: id, active: false })
+        .then((response) => {
+            console.log(response.data.message);
+            if (!response.data.error) {
+                offers.forEach((item) => {
+                    if (item.id == id) {
+                        item.active = false;
+                    }
+                });
+            }
+        });
+};
+
 const subscribe = (offer_id) => {
     console.log('subscribe');
     axios
@@ -91,6 +123,14 @@ const unsubscribe = (offer_id) => {
                     <Link :href="route('offers.edit', offer.id)">
                         <PrimaryButton>редактировать</PrimaryButton>
                     </Link>
+
+                    <PrimaryButton v-if="offer.active" @click="deactivation(offer.id)">
+                        деактивировать
+                    </PrimaryButton>
+                    <PrimaryButton v-else @click="activation(offer.id)">
+                        активировать
+                    </PrimaryButton>
+
                     <PrimaryButton @click="destroy(offer.id)">
                         удалить
                     </PrimaryButton>
