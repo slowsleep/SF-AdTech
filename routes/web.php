@@ -20,11 +20,11 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->middleware(['verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -32,26 +32,26 @@ Route::middleware('auth')->group(function () {
     Route::get('/offers/{id?}', [OfferController::class, 'show'])
     ->where('id', '[0-9]+')
     ->name('offers.show');
-});
 
-Route::group(['middleware' => ['auth', 'advertiser']], function () {
-    Route::get('/offers/create', [OfferController::class, 'create'])->name('offers.create');
-    Route::get('/offers/edit/{id?}', [OfferController::class, 'edit'])->name('offers.edit');
-});
+    Route::group(['middleware' => ['advertiser']], function () {
+        Route::get('/offers/create', [OfferController::class, 'create'])->name('offers.create');
+        Route::get('/offers/edit/{id?}', [OfferController::class, 'edit'])->name('offers.edit');
+    });
 
-Route::group(['middleware' => ['auth', 'webmaster']], function() {
-    Route::get('/offers/subscriptions', [OfferSubscriptionController::class, 'index'])->name('offers.subscriptions.index');
+    Route::group(['middleware' => ['webmaster']], function() {
+        Route::get('/offers/subscriptions', [OfferSubscriptionController::class, 'index'])->name('offers.subscriptions.index');
+    });
+
+    Route::group(['middleware' => ['admin'], 'prefix' => 'admin'], function () {
+        Route::get('/', [AdminIndexController::class, 'index'])->name('admin.index');
+        Route::get('/users/all/{role?}', [AdminUserController::class, 'index'])->name('admin.users.index');
+        Route::get('/users/create', [AdminUserController::class, 'create'])->name('admin.users.create');
+        Route::post('/users', [AdminUserController::class, 'store'])->name('admin.users.store');
+    });
 });
 
 require __DIR__.'/auth.php';
 
 Route::get('test', [IndexController::class, 'index']);
-
-Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function () {
-    Route::get('/', [AdminIndexController::class, 'index'])->name('admin.index');
-    Route::get('/users/all/{role?}', [AdminUserController::class, 'index'])->name('admin.users.index');
-    Route::get('/users/create', [AdminUserController::class, 'create'])->name('admin.users.create');
-    Route::post('/users', [AdminUserController::class, 'store'])->name('admin.users.store');
-});
 
 Route::get('/r/{ref_uuid}', [OfferSubscriptionRefController::class, 'index']);
