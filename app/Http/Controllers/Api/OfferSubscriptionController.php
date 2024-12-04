@@ -9,19 +9,33 @@ use Barryvdh\Debugbar\Facades\Debugbar;
 use Str;
 use App\Models\OfferSubscriptionRefLog;
 use Carbon\Carbon;
+use App\Models\Offer;
 
 class OfferSubscriptionController extends Controller
 {
     public function store(Request $request)
     {
-        $offer = new OfferSubscription();
-        $offer->webmaster_id = $request->user()->id;
-        $offer->offer_id = $request->offer_id;
-        $offer->ref_link_uuid = Str::uuid();
-        $offer->save();
-        $response = ['error' => false, 'message' => 'Offer subscribed successfully'];
+        try {
+            $offerSubscription = new OfferSubscription();
+            $offerSubscription->webmaster_id = $request->user()->id;
+            $offerSubscription->offer_id = $request->id;
+            $offerSubscription->ref_link_uuid = Str::uuid();
+            $offerSubscription->save();
 
-        return response()->json($response);
+            $response = ['error' => false, 'message' => 'Offer subscribed successfully.'];
+            $response['data'] = $offerSubscription->ref_link_uuid;
+
+            if ($request->has('price')) {
+                $offer = Offer::findOrFail($request->id);
+                $offer->update($request->only('price'));
+                $response['message'] .= ' And price updated successfully.';
+            }
+
+            return response()->json($response);
+        } catch(\Exception $e) {
+            Debugbar::error($e->getMessage());
+            return response()->json(['error' => true, 'message' => 'Offer subscribed failed']);
+        }
     }
 
     public function destroy(Request $request)
