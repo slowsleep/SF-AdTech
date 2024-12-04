@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Inertia\Inertia;
 use App\Models\Offer;
 use App\Models\OfferSubscription;
+use App\Models\OfferSubScriptionRefError;
 use App\Models\OfferSubscriptionRefLog;
 use Barryvdh\Debugbar\Facades\Debugbar;
 
@@ -20,8 +21,7 @@ class IndexController extends Controller
 
         $count_ref = OfferSubscription::count();
         $redirects = OfferSubscriptionRefLog::count();
-        // TODO: (когда веб-мастер попытался перенаправить на offer, на который он не подписан)
-        $rejections = 0;
+        $rejections = OfferSubScriptionRefError::count();
 
         $statistics = [
             'count_ref' => $count_ref,
