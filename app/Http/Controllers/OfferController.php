@@ -26,10 +26,13 @@ class OfferController extends Controller
             ->withCount('subscriptions')
             ->get();
             $props = compact('offers');
-        } else {
+        } else if ($user->role->name === 'webmaster') {
             $offers = Offer::all()->load('theme', 'advertiser');
             $subscriptions = OfferSubscription::where('webmaster_id', $user->id)->pluck('offer_id')->toArray();
             $props = compact('offers', 'subscriptions');
+        } else if ($user->role->name === 'admin') {
+            $offers = Offer::all()->load('theme', 'advertiser');
+            $props = compact('offers');
         }
 
         return Inertia::render('Offer/Index', $props);

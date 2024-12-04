@@ -71,7 +71,10 @@ const moveOfferToStatus = (offerId, newStatus) => {
 <template>
     <div
         class="m-2 flex flex-row bg-gray-400 p-4"
-        v-if="$page.props.auth.user.role.name == 'advertiser'"
+        v-if="
+            $page.props.auth.user.role.name == 'advertiser' ||
+            $page.props.auth.user.role.name == 'admin'
+        "
     >
         <div id="active" @drop="onDrop" @dragover.prevent>
             <h2 class="text-center text-lg">Активные заказы:</h2>
