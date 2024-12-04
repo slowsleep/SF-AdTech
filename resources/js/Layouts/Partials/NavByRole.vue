@@ -20,6 +20,12 @@ import NavLink from '@/Components/NavLink.vue';
             >
                 Users
             </NavLink>
+            <NavLink
+                :href="route('offers.index')"
+                :active="route().current('offers.index', '')"
+            >
+                Offers
+            </NavLink>
         </div>
         <div v-else class="flex flex-row items-center">
             <NavLink
