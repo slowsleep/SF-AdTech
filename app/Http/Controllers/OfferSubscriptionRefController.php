@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\OfferSubscription;
 use App\Models\OfferSubscriptionRefLog;
 use Barryvdh\Debugbar\Facades\Debugbar;
-use Illuminate\Http\Request;
+use App\Models\Offer;
 
 class OfferSubscriptionRefController extends Controller
 {
@@ -15,6 +15,12 @@ class OfferSubscriptionRefController extends Controller
         $subscription = OfferSubscription::where('ref_link_uuid', '=', $ref_uuid)->with('offer')->firstOrFail();
 
         if (!$subscription) {
+            abort(404);
+        }
+
+        $offer = Offer::where('id', '=', $subscription->offer_id)->first();
+
+        if (!$offer->active) {
             abort(404);
         }
 
