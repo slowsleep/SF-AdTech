@@ -3,10 +3,12 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { Link, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
-
 const props = defineProps({
     offer: {
         type: Object,
+    },
+    class: {
+        type: String,
     },
 });
 
@@ -50,7 +52,6 @@ const activation = (id) => {
             }
         });
 };
-
 
 const deactivation = (id) => {
     axios
@@ -123,61 +124,70 @@ const unsubscribe = (offer_id) => {
 </script>
 
 <template>
-    <Link :href="route('offers.show', props.offer.id)">
-        <p>Заголовок: {{ props.offer.title }}</p>
-    </Link>
-
-    <p v-if="$page.props.auth.user.role.name != 'advertiser'">
-        Рекламодатель: {{ props.offer.advertiser.name }}
-    </p>
-
-    <p>Цена: {{ props.offer.price }}</p>
-    <p>Сайт: {{ props.offer.url }}</p>
-    <p>Тема: {{ props.offer.theme.name }}</p>
-    <p>Активность: {{ props.offer.active ? 'active' : 'not active' }}</p>
-    <div v-if="$page.props.auth.user.role.name == 'advertiser'">
-        <Link :href="route('offers.edit', offer.id)">
-            <PrimaryButton>редактировать</PrimaryButton>
+    <div :class="props.class">
+        <Link :href="route('offers.show', props.offer.id)">
+            <p>Заголовок: {{ props.offer.title }}</p>
         </Link>
 
-        <PrimaryButton
-            v-if="props.offer.active"
-            @click="deactivation(props.offer.id)"
-        >
-            деактивировать
-        </PrimaryButton>
-        <PrimaryButton v-else @click="activation(props.offer.id)">
-            активировать
-        </PrimaryButton>
+        <p v-if="$page.props.auth.user.role.name != 'advertiser'">
+            Рекламодатель: {{ props.offer.advertiser.name }}
+        </p>
 
-        <PrimaryButton @click="destroy(props.offer.id)">удалить</PrimaryButton>
-        <p>count: {{ props.offer.subscriptions_count }}</p>
+        <p>Цена: {{ props.offer.price }}</p>
+        <p>Сайт: {{ props.offer.url }}</p>
+        <p>Тема: {{ props.offer.theme.name }}</p>
+        <p>Активность: {{ props.offer.active ? 'active' : 'not active' }}</p>
+        <div v-if="$page.props.auth.user.role.name == 'advertiser'">
+            <Link :href="route('offers.edit', offer.id)">
+                <PrimaryButton>редактировать</PrimaryButton>
+            </Link>
+
+            <PrimaryButton
+                v-if="props.offer.active"
+                @click="deactivation(props.offer.id)"
+            >
+                деактивировать
+            </PrimaryButton>
+            <PrimaryButton v-else @click="activation(props.offer.id)">
+                активировать
+            </PrimaryButton>
+
+            <PrimaryButton @click="destroy(props.offer.id)"
+                >удалить</PrimaryButton
+            >
+            <p>count: {{ props.offer.subscriptions_count }}</p>
+        </div>
+        <div v-else-if="$page.props.auth.user.role.name == 'webmaster'">
+            <PrimaryButton
+                v-if="subscriptions.includes(props.offer.id)"
+                @click="unsubscribe(props.offer.id)"
+            >
+                отписаться
+            </PrimaryButton>
+            <PrimaryButton
+                v-if="
+                    !subscriptions.includes(props.offer.id) && showPreSubscribe
+                "
+                @click.prevent="presubscribe(props.offer.id)"
+            >
+                подписаться
+            </PrimaryButton>
+            <PrimaryButton
+                v-else-if="showCancleSubscribe"
+                @click.prevent="cancleSubscribe(props.offer.id)"
+            >
+                отмена
+            </PrimaryButton>
+        </div>
+
+        <form
+            v-if="showFormSubscribe"
+            @submit.prevent="subscribe(props.offer.id)"
+        >
+            <input v-model="formSubscribe.price" type="number" step="0.01" />
+            <PrimaryButton type="submit"> подписаться </PrimaryButton>
+        </form>
+
+        <div ref="subscriptionRefLink"></div>
     </div>
-    <div v-else-if="$page.props.auth.user.role.name == 'webmaster'">
-        <PrimaryButton
-            v-if="subscriptions.includes(props.offer.id)"
-            @click="unsubscribe(props.offer.id)"
-        >
-            отписаться
-        </PrimaryButton>
-        <PrimaryButton
-            v-if="!subscriptions.includes(props.offer.id) && showPreSubscribe"
-            @click.prevent="presubscribe(props.offer.id)"
-        >
-            подписаться
-        </PrimaryButton>
-        <PrimaryButton
-            v-else-if="showCancleSubscribe"
-            @click.prevent="cancleSubscribe(props.offer.id)"
-        >
-            отмена
-        </PrimaryButton>
-    </div>
-
-    <form v-if="showFormSubscribe" @submit.prevent="subscribe(props.offer.id)">
-        <input v-model="formSubscribe.price" type="number" step="0.01" />
-        <PrimaryButton type="submit"> подписаться </PrimaryButton>
-    </form>
-
-    <div ref="subscriptionRefLink"></div>
 </template>
