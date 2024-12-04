@@ -7,14 +7,20 @@ use App\Models\OfferSubscription;
 use App\Models\OfferSubscriptionRefLog;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use App\Models\Offer;
+use App\Models\OfferSubscriptionRefError;
 
 class OfferSubscriptionRefController extends Controller
 {
     public function index(string $ref_uuid)
     {
-        $subscription = OfferSubscription::where('ref_link_uuid', '=', $ref_uuid)->with('offer')->firstOrFail();
+        $subscription = OfferSubscription::where('ref_link_uuid', '=', $ref_uuid)->with('offer')->first();
 
         if (!$subscription) {
+            OfferSubscriptionRefError::create([
+                'ref_link_uuid' => $ref_uuid,
+                'from' => $_SERVER['REMOTE_ADDR'],
+            ]);
+            Debugbar::info(OfferSubscriptionRefError::all());
             abort(404);
         }
 
